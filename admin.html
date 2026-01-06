@@ -92,7 +92,7 @@
     </style>
 </head>
 <body>
-    <button id="logoutBtn" class="logout-btn" onclick="sessionStorage.removeItem('isAdmin'); window.location.href='index.html';">Logout</button>
+    <button id="logoutBtn" class="logout-btn">Back to Quiz</button>
     <div class="container">
         <h1>Quiz Results Dashboard</h1>
         
@@ -141,31 +141,10 @@
     </div>
 
     <script>
-        // Simple authentication check (you can remove this or keep it for basic protection)
-        const ADMIN_PASSWORD = 'admin123'; // Simple password for demo purposes
-        
-        function checkAuth() {
-            const password = prompt('Enter admin password:');
-            if (password === ADMIN_PASSWORD) {
-                sessionStorage.setItem('isAdmin', 'true');
-                return true;
-            } else {
-                alert('Invalid password');
-                window.location.href = 'index.html';
-                return false;
-            }
-        }
-        
-        // Check if already authenticated or prompt for credentials
-        if (sessionStorage.getItem('isAdmin') !== 'true') {
-            if (!checkAuth()) {
-                window.location.href = 'index.html';
-            }
-        }
+        // No authentication required - anyone can view results
 
-        // Logout function
+        // Back to main page
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            sessionStorage.removeItem('isAdmin');
             window.location.href = 'index.html';
         });
 
