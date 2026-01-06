@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Quiz Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 1000;
+        }
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+    <div class="container">
+        <h1>Quiz Results Dashboard</h1>
+        
+        <div class="stats" id="statsContainer">
+            <div class="stat-box">
+                <div class="stat-value" id="totalAttempts">0</div>
+                <div class="stat-label">Total Attempts</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="avgScore">0%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">Unique Users</div>
+            </div>
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Chapter</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <tr>
+                        <td colspan="5" class="no-results">Loading results...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        if (sessionStorage.getItem('isAdmin') !== 'true') {
+            window.location.href = 'index.html';
+        }
+
+        // Logout function
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('isAdmin');
+            window.location.href = 'index.html';
+        });
+
+        // Load and display results
+        function loadResults() {
+            const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+            const tbody = document.getElementById('resultsBody');
+            const stats = {
+                totalAttempts: results.length,
+                totalScore: 0,
+                uniqueUsers: new Set()
+            };
+
+            tbody.innerHTML = '';
+
+            if (results.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="no-results">No quiz results found.</td>
+                    </tr>
+                `;
+            } else {
+                // Sort by most recent first
+                const sortedResults = [...results].sort((a, b) => 
+                    new Date(b.timestamp) - new Date(a.timestamp)
+                );
+
+                // Add rows for each result
+                sortedResults.forEach((result, index) => {
+                    const row = document.createElement('tr');
+                    const date = new Date(result.timestamp);
+                    
+                    // Format date
+                    const formattedDate = date.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    // Generate a unique user ID based on timestamp
+                    const userId = `User-${date.getTime().toString().slice(-4)}`;
+                    stats.uniqueUsers.add(userId);
+                    stats.totalScore += result.percentage;
+                    
+                    row.innerHTML = `
+                        <td>${userId}</td>
+                        <td>${result.chapter}</td>
+                        <td>${result.score}/${result.totalQuestions}</td>
+                        <td>${result.percentage}%</td>
+                        <td>${formattedDate}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Update stats
+                document.getElementById('totalAttempts').textContent = stats.totalAttempts;
+                document.getElementById('avgScore').textContent = stats.totalAttempts > 0 
+                    ? Math.round(stats.totalScore / stats.totalAttempts) + '%' 
+                    : '0%';
+                document.getElementById('totalUsers').textContent = stats.uniqueUsers.size;
+            }
+        }
+
+        // Load results when page loads
+        window.onload = loadResults;
+            });
+        }
+    </script>
+</body>
+</html>

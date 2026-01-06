@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
     <title>Data Analysis MCQs on 1st 3 Lectures</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
     <style>
         :root {
             --primary: #4f46e5;
@@ -342,6 +346,26 @@ body {
     </style>
 </head>
 <body>
+    <!-- Admin Button -->
+    <button id="adminBtn" style="display: none; position: fixed; top: 20px; right: 20px; padding: 10px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; z-index: 1000;">Admin</button>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1001; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 400px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3 style="margin-top: 0; color: #333; text-align: center;">Admin Login</h3>
+            <div style="margin-bottom: 15px;">
+                <label for="adminUsername" style="display: block; margin-bottom: 5px; font-weight: bold;">Username</label>
+                <input type="text" id="adminUsername" placeholder="Enter username" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="adminPassword" style="display: block; margin-bottom: 5px; font-weight: bold;">Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter password" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <button id="loginBtn" style="width: 100%; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; margin-top: 10px;">Login</button>
+            <div id="loginError" style="color: #f44336; margin-top: 15px; text-align: center; min-height: 20px;"></div>
+        </div>
+    </div>
+
     <!-- Landing Page -->
     <div id="landingPage" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; text-align: center; background-color: #f9fafb; padding: 20px;">
         <h1 style="margin-bottom: 20px; color: #4f46e5;">Data Analysis MCQs</h1>
@@ -1671,6 +1695,112 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Admin credentials
+const ADMIN_USERNAME = "zeyadmogy20@gmail.com";
+const ADMIN_PASSWORD = "1882005da";
+
+// Function to save quiz result to localStorage
+function saveQuizResult(chapter, score, totalQuestions) {
+    try {
+        const result = {
+            chapter: chapter,
+            score: score,
+            totalQuestions: totalQuestions,
+            percentage: Math.round((score / totalQuestions) * 100),
+            timestamp: new Date().toISOString()
+        };
+        
+        // Get existing results or initialize empty array
+        const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+        
+        // Add new result
+        results.push(result);
+        
+        // Save back to localStorage
+        localStorage.setItem('quizResults', JSON.stringify(results));
+        console.log('Result saved to localStorage');
+    } catch (error) {
+        console.error('Error saving result:', error);
+    }
+}
+
+// Update showResults to save to localStorage
+const originalShowResults = showResults;
+showResults = function() {
+    const result = originalShowResults.apply(this, arguments);
+    
+    // Save the result to localStorage
+    const currentChapter = quizData.chapters[selectedChapter];
+    saveQuizResult(
+        currentChapter.chapterTitle,
+        score,
+        currentChapter.questions.length
+    );
+    
+    return result;
+};
+
+// Admin login functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const adminBtn = document.getElementById('adminBtn');
+    const adminModal = document.getElementById('adminLoginModal');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+
+    // Show admin button
+    adminBtn.style.display = 'block';
+
+    // Show admin login modal
+    adminBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        adminModal.style.display = 'flex';
+    });
+
+    // Handle login
+    loginBtn.addEventListener('click', () => {
+        const username = document.getElementById('adminUsername').value;
+        const password = document.getElementById('adminPassword').value;
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Logging in...';
+        loginError.textContent = '';
+
+        // Simple authentication
+        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            // Store login state in sessionStorage
+            sessionStorage.setItem('isAdmin', 'true');
+            // Redirect to admin page
+            window.location.href = 'admin.html';
+        } else {
+            // Handle errors
+            loginError.textContent = 'Invalid username or password';
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
+    });
+
+    // Close modal when clicking outside
+    adminModal.addEventListener('click', (e) => {
+        if (e.target === adminModal) {
+            adminModal.style.display = 'none';
+            // Reset form
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+            loginError.textContent = '';
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
+    });
+
+    // Check if user is already logged in
+    if (sessionStorage.getItem('isAdmin') === 'true') {
+        adminBtn.textContent = 'Go to Dashboard';
+    } else {
+        adminBtn.textContent = 'Admin';
+    }
+});
 
 // Initialize the quiz when the page loads
 window.onload = () => {
