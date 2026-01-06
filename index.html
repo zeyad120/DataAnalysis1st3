@@ -1315,32 +1315,47 @@ body {
         const chapterButtons = document.querySelectorAll('.chapter-btn');
         let selectedChapter = null;
 
+        // Track if we're in the middle of a navigation
+        let isNavigating = false;
+
         // Function to show chapter selection
         function showChapterSelection() {
+            if (isNavigating) return;
+            isNavigating = true;
+            
             initialView.style.display = 'none';
             chapterSelection.style.display = 'block';
-            // Update URL without page reload
+            
+            // Always push state to maintain consistent history
             window.history.pushState({page: 'chapters'}, '', '#chapters');
+            
+            setTimeout(() => { isNavigating = false; }, 100);
         }
 
         // Function to show main content with selected chapter
         function showMainContent(chapterIndex) {
+            if (isNavigating) return;
+            isNavigating = true;
+            
             landingPage.style.display = 'none';
             mainContent.style.display = 'block';
-            // Store the selected chapter
             selectedChapter = chapterIndex;
-            // Update URL without page reload
-            window.history.pushState({page: 'quiz', chapter: chapterIndex}, '', `#quiz-${chapterIndex}`);
-            // Initialize the quiz with the selected chapter
+            
+            // Only push state if we're not already on this quiz
+            if (window.location.hash !== `#quiz-${chapterIndex}`) {
+                window.history.pushState({page: 'quiz', chapter: chapterIndex}, '', `#quiz-${chapterIndex}`);
+            }
+            
+            // Initialize the quiz
             initQuiz();
             addEventListeners();
+            
+            setTimeout(() => { isNavigating = false; }, 100);
         }
 
         // Add click event to initial view
         initialView.addEventListener('click', function() {
             showChapterSelection();
-            // Update URL for the initial chapter selection view
-            window.history.pushState({page: 'chapters'}, '', '#chapters');
         });
 
         // Add click events to chapter buttons
@@ -1354,31 +1369,57 @@ body {
 
         // Handle browser back/forward buttons
         window.addEventListener('popstate', function(event) {
-            if (window.location.hash === '#chapters') {
-                mainContent.style.display = 'none';
-                landingPage.style.display = 'flex';
-                chapterSelection.style.display = 'block';
-                initialView.style.display = 'none';
-                // Reset the quiz state
-                quizContainer.innerHTML = '';
-                resultContainer.style.display = 'none';
-                submitBtn.style.display = 'block';
-            } else if (window.location.hash === '') {
+            if (isNavigating) return;
+            isNavigating = true;
+            
+            // If no state or going to main page (no hash)
+            if (!window.location.hash || window.location.hash === '') {
                 mainContent.style.display = 'none';
                 landingPage.style.display = 'flex';
                 chapterSelection.style.display = 'none';
                 initialView.style.display = 'flex';
-                // Reset the quiz state
+                quizContainer.innerHTML = '';
+                resultContainer.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } 
+            // If going to chapters page
+            else if (window.location.hash === '#chapters') {
+                mainContent.style.display = 'none';
+                landingPage.style.display = 'flex';
+                chapterSelection.style.display = 'block';
+                initialView.style.display = 'none';
                 quizContainer.innerHTML = '';
                 resultContainer.style.display = 'none';
                 submitBtn.style.display = 'block';
             }
+            // If going to a quiz
+            else if (window.location.hash.startsWith('#quiz-')) {
+                mainContent.style.display = 'block';
+                landingPage.style.display = 'none';
+                chapterSelection.style.display = 'none';
+                const chapterIndex = parseInt(window.location.hash.split('-')[1]);
+                selectedChapter = chapterIndex;
+                initQuiz();
+            }
+            
+            setTimeout(() => { isNavigating = false; }, 100);
         });
 
-        // Add click event to back button to use browser's back functionality
+        // Back button functionality
         document.getElementById('backToMain').addEventListener('click', (e) => {
             e.preventDefault();
-            window.history.back();
+            if (isNavigating) return;
+            isNavigating = true;
+            
+            if (window.location.hash.includes('quiz-')) {
+                // If in quiz, go back to chapters
+                window.history.back();
+            } else if (window.location.hash === '#chapters' || window.location.hash === '') {
+                // If in chapters or main, go back to previous page
+                window.history.back();
+            }
+            
+            setTimeout(() => { isNavigating = false; }, 100);
         });
 
         // Add hover effect for the exam image
