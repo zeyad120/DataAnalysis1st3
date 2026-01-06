@@ -353,7 +353,10 @@ body {
     <!-- Main Content (initially hidden) -->
     <div id="mainContent" style="display: none;">
         <div class="container">
-            <header>
+            <header style="position: relative;">
+                <button id="backToMain" style="position: absolute; left: 20px; top: 20px; padding: 8px 16px; background-color: #4f46e5; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    ← Back to Main
+                </button>
                 <h1>Data Analysis MCQs</h1>
                 <p>Answer all questions and submit to see your results</p>
             </header>
@@ -1240,13 +1243,27 @@ body {
         const resultContainer = document.getElementById('resultContainer');
         const examImage = document.getElementById('examImage');
 
-        // Add click event to landing page to show main content
-        landingPage.addEventListener('click', () => {
+        // Function to show main content and hide landing page
+        function showMainContent() {
             landingPage.style.display = 'none';
             mainContent.style.display = 'block';
             // Initialize the quiz when showing the main content
             initQuiz();
             addEventListeners();
+        }
+
+        // Add click event to landing page to show main content
+        landingPage.addEventListener('click', showMainContent);
+
+        // Add click event to back button to return to landing page
+        document.getElementById('backToMain').addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            mainContent.style.display = 'none';
+            landingPage.style.display = 'flex';
+            // Reset the quiz state
+            quizContainer.innerHTML = '';
+            resultContainer.style.display = 'none';
+            submitBtn.style.display = 'block';
         });
 
         // Add hover effect for the exam image
