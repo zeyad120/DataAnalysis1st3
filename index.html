@@ -1703,7 +1703,15 @@ const ADMIN_PASSWORD = "1882005da";
 // Function to save quiz result to localStorage
 function saveQuizResult(chapter, score, totalQuestions) {
     try {
+        // Get or create a user identifier
+        let userId = localStorage.getItem('quizUserId');
+        if (!userId) {
+            userId = 'user-' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('quizUserId', userId);
+        }
+
         const result = {
+            userId: userId,
             chapter: chapter,
             score: score,
             totalQuestions: totalQuestions,

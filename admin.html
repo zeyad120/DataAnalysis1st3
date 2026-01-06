@@ -92,7 +92,7 @@
     </style>
 </head>
 <body>
-    <button id="logoutBtn" class="logout-btn">Logout</button>
+    <button id="logoutBtn" class="logout-btn" onclick="sessionStorage.removeItem('isAdmin'); window.location.href='index.html';">Logout</button>
     <div class="container">
         <h1>Quiz Results Dashboard</h1>
         
@@ -132,8 +132,23 @@
     </div>
 
     <script>
-        // Check if user is logged in
-        if (sessionStorage.getItem('isAdmin') !== 'true') {
+        // Simple authentication check
+        function checkAuth() {
+            const username = prompt('Enter admin username:');
+            const password = prompt('Enter admin password:');
+            
+            if (username === 'admin' && password === 'admin123') {
+                sessionStorage.setItem('isAdmin', 'true');
+                return true;
+            } else {
+                alert('Invalid credentials');
+                window.location.href = 'index.html';
+                return false;
+            }
+        }
+        
+        // Check if already authenticated or prompt for credentials
+        if (sessionStorage.getItem('isAdmin') !== 'true' && !checkAuth()) {
             window.location.href = 'index.html';
         }
 
@@ -181,13 +196,12 @@
                         minute: '2-digit'
                     });
                     
-                    // Generate a unique user ID based on timestamp
-                    const userId = `User-${date.getTime().toString().slice(-4)}`;
-                    stats.uniqueUsers.add(userId);
+                    // Track unique users and update stats
+                    stats.uniqueUsers.add(result.userId);
                     stats.totalScore += result.percentage;
                     
                     row.innerHTML = `
-                        <td>${userId}</td>
+                        <td>${result.userId}</td>
                         <td>${result.chapter}</td>
                         <td>${result.score}/${result.totalQuestions}</td>
                         <td>${result.percentage}%</td>
@@ -207,8 +221,6 @@
 
         // Load results when page loads
         window.onload = loadResults;
-            });
-        }
     </script>
 </body>
 </html>
