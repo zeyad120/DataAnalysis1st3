@@ -1,0 +1,26 @@
+1️⃣ عدّل ملف الـ HTML (أو CSS / JS)
+
+مثلاً:
+
+index.html
+
+2️⃣ اعمل Commit
+
+لو من GitHub مباشرة:
+
+Edit
+
+Commit changes
+
+لو من جهازك:
+
+git add .
+git commit -m "Update quiz layout"
+
+3️⃣ اعمل Push
+git push origin main
+
+
+⏱️ استنى من 10 ثواني لـ دقيقة
+🔄 اعمل Refresh للرابط
+✔️ التعديل هيظهر بنفس اللينك
