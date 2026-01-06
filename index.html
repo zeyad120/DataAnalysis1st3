@@ -1484,53 +1484,59 @@ function addEventListeners() {
         questionAttempts[questionId] = 0;
 
         button.addEventListener('click', function() {
-            const questionId = parseInt(this.dataset.question);
-            const question = quizData.chapters
-                .flatMap(chapter => chapter.questions)
-                .find(q => q.id - 1 === questionId);
-            
-            const selectedOption = document.querySelector(`input[name="q${questionId}"]:checked`);
-            const feedbackElement = document.getElementById(`feedback-${questionId}`);
-            
-            if (!selectedOption) {
-                feedbackElement.textContent = "Please select an answer first!";
-                feedbackElement.className = "feedback incorrect";
-                feedbackElement.style.display = 'block';
+            // Find the question in the currently selected chapter
+            const chapter = quizData.chapters[selectedChapter];
+            const question = chapter.questions.find(q => q.id === questionId);
+                
+            if (!question) {
+                console.error('Question not found:', questionId);
                 return;
             }
-            
-            const userAnswer = selectedOption.value;
-            const isCorrect = userAnswer === question.correctAnswer;
-            const optionElement = selectedOption.closest('.option');
-            
-            // Clear previous highlights
-            document.querySelectorAll(`[data-question="${questionId}"]`).forEach(opt => {
-                opt.classList.remove('correct', 'incorrect');
-            });
-            
-// In the check answer button click handler:
-if (isCorrect) {
-    feedbackElement.textContent = "Correct!";
-    feedbackElement.className = "feedback correct";
-    optionElement.classList.add('correct');
-    
-    // Show the explanation button
-    const explanationDiv = this.closest('.question-container').querySelector('.explanation');
-    if (explanationDiv) {
-        explanationDiv.style.display = 'block';
-    }
-} else {
-    feedbackElement.textContent = `Incorrect. The correct answer is ${question.correctAnswer}.`;
-    feedbackElement.className = "feedback incorrect";
-    optionElement.classList.add('incorrect');
-    
-    // Highlight correct answer
-    const correctOption = document.querySelector(`[data-question="${questionId}"][data-option="${question.correctAnswer}"]`);
-    if (correctOption) {
-        correctOption.classList.add('correct');
-    }
-}
-            
+
+            const selectedOption = document.querySelector(`input[name="q${questionId}"]:checked`);
+            if (!selectedOption) {
+                alert('Please select an answer first!');
+                return;
+            }
+
+            const feedbackElement = document.getElementById(`feedback-${questionId}`);
+            const isCorrect = selectedOption.value === question.correctAnswer;
+
+            // Update attempts counter
+            questionAttempts[questionId] = (questionAttempts[questionId] || 0) + 1;
+            const attemptsRemaining = 2 - questionAttempts[questionId];
+
+            // Disable all options and the check button after 2 attempts
+            if (questionAttempts[questionId] >= 2) {
+                document.querySelectorAll(`input[name="q${questionId}"]`).forEach(opt => {
+                    opt.disabled = true;
+                    // Show correct answer after 2 attempts
+                    if (opt.value === question.correctAnswer) {
+                        opt.parentElement.classList.add('correct');
+                    }
+                });
+                this.disabled = true;
+                feedbackElement.textContent = `The correct answer is ${question.correctAnswer}. ${question.explanation || ''}`;
+                feedbackElement.className = 'feedback correct';
+                return;
+            }
+
+            // Show feedback
+            if (isCorrect) {
+                feedbackElement.textContent = 'Correct!';
+                feedbackElement.className = 'feedback correct';
+                selectedOption.parentElement.classList.add('correct');
+                
+                // Disable all options for this question
+                document.querySelectorAll(`input[name="q${questionId}"]`).forEach(opt => {
+                    opt.disabled = true;
+                });
+                this.disabled = true;
+            } else {
+                feedbackElement.textContent = `Incorrect. Try again! (${attemptsRemaining} ${attemptsRemaining === 1 ? 'attempt' : 'attempts'} remaining)`;
+                feedbackElement.className = 'feedback incorrect';
+                selectedOption.parentElement.classList.add('incorrect');
+            }
             feedbackElement.style.display = 'block';
         });
     });
