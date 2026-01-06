@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Data Analysis MCQs on 1st 3 Lectures</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-700: #374151;
+            --red-100: #fee2e2;
+            --red-500: #ef4444;
+            --green-100: #dcfce7;
+            --green-500: #22c55e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9fafb;
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .option {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .option.selected {
+            background-color: #e0e7ff;
+            border-color: #818cf8;
+        }
+        
+        .option.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+        }
+        
+        .option.wrong {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        
+        .explanation {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #e5e7eb;
+}
+        
+        .show-explanation {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.show-explanation:hover {
+    background-color: #4338ca;
+}
+
+.explanation-text {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8fafc;
+    border-radius: 4px;
+    border-left: 3px solid #4f46e5;
+    display: none;
+}
+        
+        #submitBtn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 12px;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #submitBtn:hover {
+            background-color: #4338ca;
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .score {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+        
+        .restart-btn {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .restart-btn:hover {
+            background-color: #4338ca;
+        }
+        
+        .correct-answer {
+            border-left: 4px solid #22c55e;
+        }
+        
+        .wrong-answer {
+            border-left: 4px solid #ef4444;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+            
+            .option {
+                padding: 10px;
+            }
+        }
+        /* Add these styles to your existing style section */
+.check-answer {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 10px 0;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.check-answer:hover {
+    background-color: #4338ca;
+}
+
+.feedback {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    display: none;
+}
+
+.feedback.correct {
+    background-color: #dcfce7;
+    color: #166534;
+    border-left: 3px solid #16a34a;
+}
+
+.feedback.incorrect {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-left: 3px solid #dc2626;
+}
+
+.option.selected {
+    background-color: #e0e7ff;
+    border-color: #818cf8;
+}
+
+.option.correct {
+    background-color: #dcfce7;
+    border-color: #22c55e;
+}
+
+.option.incorrect {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+}
+/* Dark mode styles */
+:root {
+    --bg-color: #f9fafb;
+    --text-color: #1f2937;
+    --container-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --option-hover: #f3f4f6;
+    --option-selected: #e0e7ff;
+    --correct-bg: #dcfce7;
+    --correct-border: #22c55e;
+    --incorrect-bg: #fee2e2;
+    --incorrect-border: #ef4444;
+    --explanation-bg: #f8fafc;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a2e;
+    --text-color: #e2e8f0;
+    --container-bg: #16213e;
+    --border-color: #2d3748;
+    --primary: #818cf8;
+    --primary-hover: #6366f1;
+    --option-hover: #2d3748;
+    --option-selected: #3730a3;
+    --correct-bg: #1a3b2e;
+    --correct-border: #10b981;
+    --incorrect-bg: #3e1e1e;
+    --incorrect-border: #ef4444;
+    --explanation-bg: #1e293b;
+}
+
+/* Update existing styles to use CSS variables */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.question-container, .result-container {
+    background: var(--container-bg);
+    border: 1px solid var(--border-color);
+}
+
+.option:hover {
+    background-color: var(--option-hover);
+}
+
+.option.selected {
+    background-color: var(--option-selected);
+}
+
+.option.correct {
+    background-color: var(--correct-bg);
+    border-color: var(--correct-border);
+}
+
+.option.incorrect {
+    background-color: var(--incorrect-bg);
+    border-color: var(--incorrect-border);
+}
+
+.explanation-text {
+    background-color: var(--explanation-bg);
+    border-left: 3px solid var(--primary);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: var(--container-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.theme-toggle:hover {
+    background: var(--option-hover);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Data Analysis MCQs</h1>
+            <p>Answer all questions and submit to see your results</p>
+        </header>
+
+        <div id="quizContainer">
+            <!-- Questions will be inserted here by JavaScript -->
+        </div>
+
+        <button id="submitBtn">Submit Quiz</button>
+
+        <div class="result-container" id="resultContainer">
+            <h2>Quiz Completed!</h2>
+            <div class="score">Your score: <span id="score">0</span>/<span id="totalQuestions">0</span></div>
+            <button class="restart-btn" id="restartBtn">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const quizData = {
+    title: "Advanced MCQs with Answers & Explanations - Data Analysis",
+    subject: "Data Analysis",
+    chapters: [
+        {
+            chapterTitle: "Chapter 1: Introduction to Data Analysis",
+            questions: [
+                {
+                    id: 1,
+                    question: "What is the primary goal of data analysis?",
+                    options: [
+                        { key: "A", text: "Collecting large datasets" },
+                        { key: "B", text: "Storing information efficiently" },
+                        { key: "C", text: "Transforming raw data into insights" },
+                        { key: "D", text: "Removing all errors from data" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Data analysis focuses on extracting meaning and insights from raw data, not just collecting or storing it."
+                },
+                {
+                    id: 2,
+                    question: "Why is data often referred to as 'the new oil'?",
+                    options: [
+                        { key: "A", text: "Because it is limited" },
+                        { key: "B", text: "Because it is expensive" },
+                        { key: "C", text: "Because it must be refined to be useful" },
+                        { key: "D", text: "Because it replaces energy resources" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Raw data has little value unless processed and analyzed, just like crude oil."
+                },
+                {
+                    id: 3,
+                    question: "Which step comes immediately before modeling in the data analysis process?",
+                    options: [
+                        { key: "A", text: "Reporting" },
+                        { key: "B", text: "Data collection" },
+                        { key: "C", text: "Data cleaning" },
+                        { key: "D", text: "Exploratory Data Analysis" }
+                    ],
+                    correctAnswer: "D",
+                    explanation: "EDA helps understand patterns and anomalies before applying models."
+                },
+                {
+                    id: 4,
+                    question: "Customer satisfaction levels (Poor, Good, Excellent) represent which data type?",
+                    options: [
+                        { key: "A", text: "Nominal" },
+                        { key: "B", text: "Ordinal" },
+                        { key: "C", text: "Interval" },
+                        { key: "D", text: "Ratio" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "The categories have order but no fixed numerical distance."
+                },
+                {
+                    id: 5,
+                    question: "Which scale of measurement has a true zero?",
+                    options: [
+                        { key: "A", text: "Nominal" },
+                        { key: "B", text: "Ordinal" },
+                        { key: "C", text: "Interval" },
+                        { key: "D", text: "Ratio" }
+                    ],
+                    correctAnswer: "D",
+                    explanation: "Ratio scales allow meaningful comparisons like 'twice as much'."
+                },
+                {
+                    id: 6,
+                    question: "Eye color is an example of:",
+                    options: [
+                        { key: "A", text: "Quantitative discrete" },
+                        { key: "B", text: "Quantitative continuous" },
+                        { key: "C", text: "Qualitative nominal" },
+                        { key: "D", text: "Qualitative ordinal" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Eye color is categorical with no inherent order."
+                },
+                {
+                    id: 7,
+                    question: "Predicting future loan default risk is an example of:",
+                    options: [
+                        { key: "A", text: "Descriptive analysis" },
+                        { key: "B", text: "Diagnostic analysis" },
+                        { key: "C", text: "Predictive analysis" },
+                        { key: "D", text: "Prescriptive analysis" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "It uses historical data to forecast future outcomes."
+                },
+                {
+                    id: 8,
+                    question: "Why is data cleaning essential?",
+                    options: [
+                        { key: "A", text: "To increase dataset size" },
+                        { key: "B", text: "To guarantee correct predictions" },
+                        { key: "C", text: "To improve data reliability" },
+                        { key: "D", text: "To visualize faster" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Clean data reduces errors and misleading insights."
+                },
+                {
+                    id: 9,
+                    question: "Which tool is best suited for big data processing?",
+                    options: [
+                        { key: "A", text: "Excel" },
+                        { key: "B", text: "Google Sheets" },
+                        { key: "C", text: "Hadoop" },
+                        { key: "D", text: "PowerPoint" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Hadoop is designed for distributed large-scale data."
+                },
+                {
+                    id: 10,
+                    question: "Which challenge is mainly ethical rather than technical?",
+                    options: [
+                        { key: "A", text: "Missing values" },
+                        { key: "B", text: "Duplicate data" },
+                        { key: "C", text: "Privacy issues" },
+                        { key: "D", text: "Outliers" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Privacy concerns involve legal and ethical responsibility."
+                },
+                {
+                    id: 11,
+                    question: "Temperature measured in Celsius uses which scale?",
+                    options: [
+                        { key: "A", text: "Nominal" },
+                        { key: "B", text: "Ordinal" },
+                        { key: "C", text: "Interval" },
+                        { key: "D", text: "Ratio" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Zero does not represent absence of temperature."
+                },
+                {
+                    id: 12,
+                    question: "Detecting unusual credit card spending is an example of:",
+                    options: [
+                        { key: "A", text: "Data collection" },
+                        { key: "B", text: "Predictive analysis" },
+                        { key: "C", text: "Reporting" },
+                        { key: "D", text: "Data visualization" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "It predicts potential fraud behavior."
+                },
+                {
+                    id: 13,
+                    question: "Which step converts numerical results into real-world meaning?",
+                    options: [
+                        { key: "A", text: "Modeling" },
+                        { key: "B", text: "Interpretation" },
+                        { key: "C", text: "Cleaning" },
+                        { key: "D", text: "Collection" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Interpretation explains what results actually mean."
+                },
+                {
+                    id: 14,
+                    question: "Height measured in centimeters is classified as:",
+                    options: [
+                        { key: "A", text: "Interval" },
+                        { key: "B", text: "Ordinal" },
+                        { key: "C", text: "Ratio" },
+                        { key: "D", text: "Nominal" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Height has a true zero and meaningful ratios."
+                },
+                {
+                    id: 15,
+                    question: "Improving athlete training using performance data is an example of:",
+                    options: [
+                        { key: "A", text: "Pattern detection" },
+                        { key: "B", text: "Optimization" },
+                        { key: "C", text: "Reporting" },
+                        { key: "D", text: "Data collection" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Optimization uses data to improve outcomes."
+                },
+                {
+                    id: 16,
+                    question: "Which is NOT quantitative data?",
+                    options: [
+                        { key: "A", text: "Discrete" },
+                        { key: "B", text: "Continuous" },
+                        { key: "C", text: "Ordinal" },
+                        { key: "D", text: "Numeric" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Ordinal data is qualitative."
+                },
+                {
+                    id: 17,
+                    question: "In the cooking analogy, data cleaning is like:",
+                    options: [
+                        { key: "A", text: "Buying ingredients" },
+                        { key: "B", text: "Cooking" },
+                        { key: "C", text: "Washing and cutting ingredients" },
+                        { key: "D", text: "Serving food" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Cleaning prepares data before analysis."
+                },
+                {
+                    id: 18,
+                    question: "Data without analysis is considered useless because it lacks:",
+                    options: [
+                        { key: "A", text: "Volume" },
+                        { key: "B", text: "Variety" },
+                        { key: "C", text: "Interpretation" },
+                        { key: "D", text: "Storage" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Insights come only from interpretation."
+                },
+                {
+                    id: 19,
+                    question: "Census data is mainly used in which domain?",
+                    options: [
+                        { key: "A", text: "Sports" },
+                        { key: "B", text: "Government" },
+                        { key: "C", text: "Marketing" },
+                        { key: "D", text: "Healthcare" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Census data supports government planning."
+                },
+                {
+                    id: 20,
+                    question: "Which statement about interval data is correct?",
+                    options: [
+                        { key: "A", text: "Has true zero" },
+                        { key: "B", text: "Has no order" },
+                        { key: "C", text: "Ratios are meaningful" },
+                        { key: "D", text: "Differences are meaningful" }
+                    ],
+                    correctAnswer: "D",
+                    explanation: "Interval data allows comparison of differences but not ratios."
+                }
+            ]
+        },
+        {
+            chapterTitle: "Chapter 2: Data Collection & Preparation",
+            questions: [
+                {
+                    id: 21,
+                    question: "Primary data is:",
+                    options: [
+                        { key: "A", text: "Downloaded from databases" },
+                        { key: "B", text: "Collected firsthand" },
+                        { key: "C", text: "Already processed" },
+                        { key: "D", text: "Aggregated data" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Primary data is gathered directly by the researcher."
+                },
+                {
+                    id: 22,
+                    question: "Kaggle datasets are an example of:",
+                    options: [
+                        { key: "A", text: "Primary data" },
+                        { key: "B", text: "Experimental data" },
+                        { key: "C", text: "Secondary data" },
+                        { key: "D", text: "Survey data" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "They already exist and are reused."
+                },
+                {
+                    id: 23,
+                    question: "JSON files are classified as:",
+                    options: [
+                        { key: "A", text: "Structured" },
+                        { key: "B", text: "Semi-structured" },
+                        { key: "C", text: "Unstructured" },
+                        { key: "D", text: "Time-series" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "JSON has structure but not strict tables."
+                },
+                {
+                    id: 24,
+                    question: "Which issue most affects data validity?",
+                    options: [
+                        { key: "A", text: "Noise" },
+                        { key: "B", text: "Duplicates" },
+                        { key: "C", text: "Bias" },
+                        { key: "D", text: "Normalization" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Biased samples lead to misleading conclusions."
+                },
+                {
+                    id: 25,
+                    question: "SQL databases are best for:",
+                    options: [
+                        { key: "A", text: "Image storage" },
+                        { key: "B", text: "Relational querying" },
+                        { key: "C", text: "Text mining" },
+                        { key: "D", text: "Visualization" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "SQL is optimized for structured relational data."
+                },
+                {
+                    id: 26,
+                    question: "Median is preferred for filling missing values when data is:",
+                    options: [
+                        { key: "A", text: "Symmetric" },
+                        { key: "B", text: "Skewed" },
+                        { key: "C", text: "Binary" },
+                        { key: "D", text: "Categorical" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Median is resistant to outliers."
+                },
+                {
+                    id: 27,
+                    question: "Outliers should always be removed:",
+                    options: [
+                        { key: "A", text: "True" },
+                        { key: "B", text: "False" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Outliers may contain important information."
+                },
+                {
+                    id: 28,
+                    question: "Standardization results in:",
+                    options: [
+                        { key: "A", text: "Values between 0 and 1" },
+                        { key: "B", text: "Mean = 0 and SD = 1" },
+                        { key: "C", text: "Removal of outliers" },
+                        { key: "D", text: "Integer values" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "This is the definition of standardization."
+                },
+                {
+                    id: 29,
+                    question: "Why must categorical data be encoded?",
+                    options: [
+                        { key: "A", text: "To reduce size" },
+                        { key: "B", text: "To remove bias" },
+                        { key: "C", text: "Because models require numeric input" },
+                        { key: "D", text: "To visualize faster" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Most ML algorithms only accept numbers."
+                },
+                {
+                    id: 30,
+                    question: "Feature engineering mainly aims to:",
+                    options: [
+                        { key: "A", text: "Clean data" },
+                        { key: "B", text: "Improve model performance" },
+                        { key: "C", text: "Reduce noise" },
+                        { key: "D", text: "Store data" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Better features lead to better models."
+                },
+                {
+                    id: 31,
+                    question: "Different date formats represent:",
+                    options: [
+                        { key: "A", text: "Noise" },
+                        { key: "B", text: "Outliers" },
+                        { key: "C", text: "Inconsistent formatting" },
+                        { key: "D", text: "Missing data" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Formats must be standardized."
+                },
+                {
+                    id: 32,
+                    question: "Time-series data must include:",
+                    options: [
+                        { key: "A", text: "Categories" },
+                        { key: "B", text: "Labels" },
+                        { key: "C", text: "Time dimension" },
+                        { key: "D", text: "Images" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Time is essential in time-series data."
+                },
+                {
+                    id: 33,
+                    question: "Noise refers to:",
+                    options: [
+                        { key: "A", text: "Missing data" },
+                        { key: "B", text: "Duplicate rows" },
+                        { key: "C", text: "Random irrelevant variation" },
+                        { key: "D", text: "Extreme values" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Noise hides real patterns."
+                },
+                {
+                    id: 34,
+                    question: "Best tool for querying large databases:",
+                    options: [
+                        { key: "A", text: "Excel" },
+                        { key: "B", text: "SQL" },
+                        { key: "C", text: "Tableau" },
+                        { key: "D", text: "Power BI" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "SQL is optimized for queries."
+                },
+                {
+                    id: 35,
+                    question: "Data integration means:",
+                    options: [
+                        { key: "A", text: "Cleaning data" },
+                        { key: "B", text: "Combining data sources" },
+                        { key: "C", text: "Encoding categories" },
+                        { key: "D", text: "Visualizing data" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Integration merges multiple sources."
+                },
+                {
+                    id: 36,
+                    question: "GDPR focuses on:",
+                    options: [
+                        { key: "A", text: "Data speed" },
+                        { key: "B", text: "Data storage" },
+                        { key: "C", text: "Data privacy" },
+                        { key: "D", text: "Data visualization" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "GDPR regulates personal data usage."
+                },
+                {
+                    id: 37,
+                    question: "Sensor failure usually causes:",
+                    options: [
+                        { key: "A", text: "Bias" },
+                        { key: "B", text: "Missing values" },
+                        { key: "C", text: "Noise" },
+                        { key: "D", text: "Encoding errors" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Sensors may stop recording data."
+                },
+                {
+                    id: 38,
+                    question: "Removing duplicates improves:",
+                    options: [
+                        { key: "A", text: "Volume" },
+                        { key: "B", text: "Quality" },
+                        { key: "C", text: "Bias" },
+                        { key: "D", text: "Security" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Duplicates distort analysis."
+                },
+                {
+                    id: 39,
+                    question: "Normalization is critical for:",
+                    options: [
+                        { key: "A", text: "Tree models" },
+                        { key: "B", text: "Distance-based models" },
+                        { key: "C", text: "Visualization" },
+                        { key: "D", text: "Reporting" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Distance metrics are scale-sensitive."
+                },
+                {
+                    id: 40,
+                    question: "Web scraping usually produces:",
+                    options: [
+                        { key: "A", text: "Clean data" },
+                        { key: "B", text: "Structured data" },
+                        { key: "C", text: "Unstructured data" },
+                        { key: "D", text: "Labeled data" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Web data is often messy text."
+                },
+                {
+                    id: 41,
+                    question: "ETL stands for:",
+                    options: [
+                        { key: "A", text: "Encode, Transform, Load" },
+                        { key: "B", text: "Extract, Transform, Load" },
+                        { key: "C", text: "Explore, Test, Learn" },
+                        { key: "D", text: "Evaluate, Train, Label" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Standard data pipeline process."
+                },
+                {
+                    id: 42,
+                    question: "Which step ensures ethical data handling?",
+                    options: [
+                        { key: "A", text: "Visualization" },
+                        { key: "B", text: "Cleaning" },
+                        { key: "C", text: "Privacy compliance" },
+                        { key: "D", text: "Encoding" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Ethics focus on privacy and consent."
+                },
+                {
+                    id: 43,
+                    question: "Which is NOT a data collection method?",
+                    options: [
+                        { key: "A", text: "Survey" },
+                        { key: "B", text: "Interview" },
+                        { key: "C", text: "Observation" },
+                        { key: "D", text: "Normalization" }
+                    ],
+                    correctAnswer: "D",
+                    explanation: "Normalization is preprocessing."
+                },
+                {
+                    id: 44,
+                    question: "Customer reviews text is:",
+                    options: [
+                        { key: "A", text: "Structured" },
+                        { key: "B", text: "Semi-structured" },
+                        { key: "C", text: "Unstructured" },
+                        { key: "D", text: "Time-series" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Free text has no fixed structure."
+                },
+                {
+                    id: 45,
+                    question: "Poor data preparation mainly leads to:",
+                    options: [
+                        { key: "A", text: "Slower storage" },
+                        { key: "B", text: "Bad analysis results" },
+                        { key: "C", text: "Larger datasets" },
+                        { key: "D", text: "Faster models" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Garbage in → garbage out."
+                }
+            ]
+        },
+        {
+            chapterTitle: "Chapter 3: Exploratory Data Analysis",
+            questions: [
+                {
+                    id: 46,
+                    question: "Main purpose of EDA is to:",
+                    options: [
+                        { key: "A", text: "Build models" },
+                        { key: "B", text: "Confirm hypotheses" },
+                        { key: "C", text: "Understand data" },
+                        { key: "D", text: "Optimize algorithms" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "EDA explores patterns and issues."
+                },
+                {
+                    id: 47,
+                    question: "EDA should be performed:",
+                    options: [
+                        { key: "A", text: "After modeling" },
+                        { key: "B", text: "Before modeling" },
+                        { key: "C", text: "After reporting" },
+                        { key: "D", text: "During deployment" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Exploration guides modeling decisions."
+                },
+                {
+                    id: 48,
+                    question: "Most outlier-resistant statistic:",
+                    options: [
+                        { key: "A", text: "Mean" },
+                        { key: "B", text: "Median" },
+                        { key: "C", text: "Variance" },
+                        { key: "D", text: "Range" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Median is unaffected by extreme values."
+                },
+                {
+                    id: 49,
+                    question: "In right-skewed data:",
+                    options: [
+                        { key: "A", text: "Mean < Median" },
+                        { key: "B", text: "Mean = Median" },
+                        { key: "C", text: "Mean > Median" },
+                        { key: "D", text: "No outliers" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Long right tail pulls mean upward."
+                },
+                {
+                    id: 50,
+                    question: "Best plot for distribution shape:",
+                    options: [
+                        { key: "A", text: "Scatter plot" },
+                        { key: "B", text: "Histogram" },
+                        { key: "C", text: "Line chart" },
+                        { key: "D", text: "Heatmap" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Histograms show frequency distribution."
+                },
+                {
+                    id: 51,
+                    question: "Boxplots are mainly used to:",
+                    options: [
+                        { key: "A", text: "Show correlation" },
+                        { key: "B", text: "Detect outliers" },
+                        { key: "C", text: "Encode data" },
+                        { key: "D", text: "Normalize values" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Whiskers reveal outliers."
+                },
+                {
+                    id: 52,
+                    question: "Z-score outliers are typically beyond:",
+                    options: [
+                        { key: "A", text: "±1" },
+                        { key: "B", text: "±2" },
+                        { key: "C", text: "±3" },
+                        { key: "D", text: "±5" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Standard statistical rule."
+                },
+                {
+                    id: 53,
+                    question: "Correlation of -0.9 indicates:",
+                    options: [
+                        { key: "A", text: "No relationship" },
+                        { key: "B", text: "Weak positive" },
+                        { key: "C", text: "Strong negative" },
+                        { key: "D", text: "Random relation" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Values close to -1 show strong inverse relation."
+                },
+                {
+                    id: 54,
+                    question: "Heatmaps are best for:",
+                    options: [
+                        { key: "A", text: "Univariate analysis" },
+                        { key: "B", text: "Correlation visualization" },
+                        { key: "C", text: "Time trends" },
+                        { key: "D", text: "Frequency counts" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Heatmaps show correlation matrices clearly."
+                },
+                {
+                    id: 55,
+                    question: "Best plot for two numerical variables:",
+                    options: [
+                        { key: "A", text: "Bar chart" },
+                        { key: "B", text: "Histogram" },
+                        { key: "C", text: "Scatter plot" },
+                        { key: "D", text: "Pie chart" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Scatter plots reveal relationships."
+                },
+                {
+                    id: 56,
+                    question: "Multivariate analysis involves:",
+                    options: [
+                        { key: "A", text: "One variable" },
+                        { key: "B", text: "Two variables" },
+                        { key: "C", text: "More than two variables" },
+                        { key: "D", text: "Only categorical data" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Multivariate = multiple variables."
+                },
+                {
+                    id: 57,
+                    question: "Which metric measures consistency?",
+                    options: [
+                        { key: "A", text: "Mean" },
+                        { key: "B", text: "Mode" },
+                        { key: "C", text: "Standard deviation" },
+                        { key: "D", text: "Median" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Lower SD means more consistent data."
+                },
+                {
+                    id: 58,
+                    question: "Best tool for business dashboards:",
+                    options: [
+                        { key: "A", text: "Pandas" },
+                        { key: "B", text: "NumPy" },
+                        { key: "C", text: "Tableau" },
+                        { key: "D", text: "SQL" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Tableau is designed for dashboards."
+                },
+                {
+                    id: 59,
+                    question: "EDA helps generate:",
+                    options: [
+                        { key: "A", text: "Final models" },
+                        { key: "B", text: "New hypotheses" },
+                        { key: "C", text: "Clean data" },
+                        { key: "D", text: "Encoded features" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Insights lead to new questions."
+                },
+                {
+                    id: 60,
+                    question: "Shoe size vs intelligence is an example of:",
+                    options: [
+                        { key: "A", text: "Strong correlation" },
+                        { key: "B", text: "Negative correlation" },
+                        { key: "C", text: "No correlation" },
+                        { key: "D", text: "Causal relationship" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Completely unrelated variables."
+                },
+                {
+                    id: 61,
+                    question: "Pair plots are used to:",
+                    options: [
+                        { key: "A", text: "Remove outliers" },
+                        { key: "B", text: "Compare variable pairs" },
+                        { key: "C", text: "Encode categories" },
+                        { key: "D", text: "Normalize data" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "They show all pairwise relationships."
+                },
+                {
+                    id: 62,
+                    question: "Seeing patterns that confirm beliefs is:",
+                    options: [
+                        { key: "A", text: "Noise" },
+                        { key: "B", text: "Bias" },
+                        { key: "C", text: "Outliers" },
+                        { key: "D", text: "Variance" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "This is analyst bias."
+                },
+                {
+                    id: 63,
+                    question: "IQR is calculated using:",
+                    options: [
+                        { key: "A", text: "Mean" },
+                        { key: "B", text: "Mode" },
+                        { key: "C", text: "Quartiles" },
+                        { key: "D", text: "Variance" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "IQR = Q3 − Q1."
+                },
+                {
+                    id: 64,
+                    question: "Which is NOT part of EDA?",
+                    options: [
+                        { key: "A", text: "Summarization" },
+                        { key: "B", text: "Visualization" },
+                        { key: "C", text: "Interpretation" },
+                        { key: "D", text: "Deployment" }
+                    ],
+                    correctAnswer: "D",
+                    explanation: "Deployment comes much later."
+                },
+                {
+                    id: 65,
+                    question: "Best chart for categorical frequency:",
+                    options: [
+                        { key: "A", text: "Scatter plot" },
+                        { key: "B", text: "Histogram" },
+                        { key: "C", text: "Bar chart" },
+                        { key: "D", text: "Line plot" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Bar charts show category counts."
+                },
+                {
+                    id: 66,
+                    question: "EDA is mainly:",
+                    options: [
+                        { key: "A", text: "Confirmatory" },
+                        { key: "B", text: "Exploratory" },
+                        { key: "C", text: "Prescriptive" },
+                        { key: "D", text: "Automated" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "It explores data without assumptions."
+                },
+                {
+                    id: 67,
+                    question: "Tool combining visualization and reporting:",
+                    options: [
+                        { key: "A", text: "SQL" },
+                        { key: "B", text: "Power BI" },
+                        { key: "C", text: "NumPy" },
+                        { key: "D", text: "Pandas" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Power BI is built for business reporting."
+                },
+                {
+                    id: 68,
+                    question: "Large datasets make EDA difficult because of:",
+                    options: [
+                        { key: "A", text: "Storage cost" },
+                        { key: "B", text: "Visualization complexity" },
+                        { key: "C", text: "Encoding issues" },
+                        { key: "D", text: "Bias" }
+                    ],
+                    correctAnswer: "B",
+                    explanation: "Harder to visualize large data clearly."
+                },
+                {
+                    id: 69,
+                    question: "Which statistic measures spread?",
+                    options: [
+                        { key: "A", text: "Mean" },
+                        { key: "B", text: "Median" },
+                        { key: "C", text: "Standard deviation" },
+                        { key: "D", text: "Mode" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Spread describes variability."
+                },
+                {
+                    id: 70,
+                    question: "EDA should always precede:",
+                    options: [
+                        { key: "A", text: "Data collection" },
+                        { key: "B", text: "Data cleaning" },
+                        { key: "C", text: "Modeling" },
+                        { key: "D", text: "Reporting" }
+                    ],
+                    correctAnswer: "C",
+                    explanation: "Understanding data is essential before modeling."
+                }
+            ]
+        }
+    ]
+};
+        // DOM Elements
+        const quizContainer = document.getElementById('quizContainer');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const scoreElement = document.getElementById('score');
+        const totalQuestionsElement = document.getElementById('totalQuestions');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // Quiz state
+        let score = 0;
+        let userAnswers = {};
+
+       // Initialize the quiz
+function initQuiz() {
+    let quizHTML = '';
+    let questionNumber = 1;
+    
+    // Reset user answers
+    userAnswers = {};
+    
+    // Loop through each chapter
+    quizData.chapters.forEach((chapter, chapterIndex) => {
+        // Add chapter title
+        quizHTML += `<h2 class="chapter-title">${chapter.chapterTitle}</h2>`;
+        
+        // Add questions for this chapter
+        chapter.questions.forEach(question => {
+           // In the initQuiz function, update the question container HTML to include all necessary elements:
+quizHTML += `
+    <div class="question-container" id="q${question.id - 1}">
+        <div class="question">${questionNumber++}. ${question.question}</div>
+        <div class="options">
+            ${question.options.map(option => `
+                <label class="option" data-question="${question.id - 1}" data-option="${option.key}">
+                    <input type="radio" 
+                           name="q${question.id - 1}" 
+                           value="${option.key}">
+                    <span><strong>${option.key}.</strong> ${option.text}</span>
+                </label>
+            `).join('')}
+        </div>
+        <button class="check-answer" data-question="${question.id - 1}">Check Answer</button>
+        <div class="feedback" id="feedback-${question.id - 1}"></div>
+        <div class="explanation" style="display: none;">
+            <button class="show-explanation" data-question="${question.id - 1}">Show Explanation</button>
+            <div class="explanation-text">
+                <strong>Explanation:</strong> ${question.explanation}
+            </div>
+        </div>
+    </div>
+`;
+        });
+    });
+
+    quizContainer.innerHTML = quizHTML;
+    addEventListeners();
+}
+// Add event listeners
+function addEventListeners() {
+    // Track attempts for each question
+    const questionAttempts = {};
+
+    // Option selection
+    document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', function() {
+            const questionId = parseInt(this.dataset.question);
+            const selectedOption = this.dataset.option;
+            
+            // Store user's answer
+            userAnswers[questionId] = selectedOption;
+            
+            // Update UI
+            document.querySelectorAll(`[data-question="${questionId}"]`).forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            this.classList.add('selected');
+            
+            // Re-enable check button when a new option is selected
+            const checkButton = document.querySelector(`.check-answer[data-question="${questionId}"]`);
+            if (checkButton) {
+                checkButton.disabled = false;
+            }
+            
+            // Clear previous feedback
+            const feedbackElement = document.getElementById(`feedback-${questionId}`);
+            if (feedbackElement) {
+                feedbackElement.style.display = 'none';
+            }
+        });
+    });
+
+    // Check answer button
+    document.querySelectorAll('.check-answer').forEach(button => {
+        // Initialize attempts counter for this question
+        const questionId = parseInt(button.dataset.question);
+        questionAttempts[questionId] = 0;
+
+        button.addEventListener('click', function() {
+            const questionId = parseInt(this.dataset.question);
+            const question = quizData.chapters
+                .flatMap(chapter => chapter.questions)
+                .find(q => q.id - 1 === questionId);
+            
+            const selectedOption = document.querySelector(`input[name="q${questionId}"]:checked`);
+            const feedbackElement = document.getElementById(`feedback-${questionId}`);
+            
+            if (!selectedOption) {
+                feedbackElement.textContent = "Please select an answer first!";
+                feedbackElement.className = "feedback incorrect";
+                feedbackElement.style.display = 'block';
+                return;
+            }
+            
+            const userAnswer = selectedOption.value;
+            const isCorrect = userAnswer === question.correctAnswer;
+            const optionElement = selectedOption.closest('.option');
+            
+            // Clear previous highlights
+            document.querySelectorAll(`[data-question="${questionId}"]`).forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+// In the check answer button click handler:
+if (isCorrect) {
+    feedbackElement.textContent = "Correct!";
+    feedbackElement.className = "feedback correct";
+    optionElement.classList.add('correct');
+    
+    // Show the explanation button
+    const explanationDiv = this.closest('.question-container').querySelector('.explanation');
+    if (explanationDiv) {
+        explanationDiv.style.display = 'block';
+    }
+} else {
+    feedbackElement.textContent = `Incorrect. The correct answer is ${question.correctAnswer}.`;
+    feedbackElement.className = "feedback incorrect";
+    optionElement.classList.add('incorrect');
+    
+    // Highlight correct answer
+    const correctOption = document.querySelector(`[data-question="${questionId}"][data-option="${question.correctAnswer}"]`);
+    if (correctOption) {
+        correctOption.classList.add('correct');
+    }
+}
+            
+            feedbackElement.style.display = 'block';
+        });
+    });
+
+    // Rest of your existing event listeners...
+    document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('show-explanation')) {
+        e.preventDefault();
+        const explanation = e.target.nextElementSibling;
+        explanation.style.display = explanation.style.display === 'block' ? 'none' : 'block';
+        e.target.textContent = explanation.style.display === 'block' ? 'Hide Explanation' : 'Show Explanation';
+    }
+});
+    submitBtn.addEventListener('click', showResults);
+    
+    restartBtn.addEventListener('click', () => {
+        resultContainer.style.display = 'none';
+        window.scrollTo(0, 0);
+        initQuiz();
+    });
+}
+// Theme toggle functionality
+const themeToggle = document.createElement('button');
+themeToggle.id = 'themeToggle';
+themeToggle.className = 'theme-toggle';
+themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+themeToggle.textContent = '🌓';
+document.querySelector('header').appendChild(themeToggle);
+
+// Check for saved theme preference or use system preference
+const savedTheme = localStorage.getItem('theme') || 
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+document.documentElement.setAttribute('data-theme', savedTheme);
+themeToggle.textContent = savedTheme === 'dark' ? '🌞' : '🌙';
+
+// Toggle theme when button is clicked
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    themeToggle.textContent = newTheme === 'dark' ? '🌞' : '🌙';
+});
+
+// Show results
+function showResults() {
+    const allQuestions = quizData.chapters.flatMap(chapter => chapter.questions);
+    score = 0;
+    
+    allQuestions.forEach((question) => {
+        const userAnswer = userAnswers[question.id - 1];
+        const questionElement = document.getElementById(`q${question.id - 1}`);
+        
+        if (!questionElement) return;
+        
+        if (userAnswer === question.correctAnswer) {
+            score++;
+            questionElement.classList.add('correct-answer');
+        } else {
+            questionElement.classList.add('wrong-answer');
+        }
+    });
+
+    // Show score
+    scoreElement.textContent = score;
+    totalQuestionsElement.textContent = allQuestions.length;
+    resultContainer.style.display = 'block';
+    
+    // Scroll to results
+    resultContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Add chapter title styling
+const style = document.createElement('style');
+style.textContent = `
+    .chapter-title {
+        color: #4f46e5;
+        margin: 30px 0 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e5e7eb;
+    }
+`;
+document.head.appendChild(style);
+
+// Initialize the quiz when the page loads
+window.onload = initQuiz;
+    </script>
+</body>
+</html>
