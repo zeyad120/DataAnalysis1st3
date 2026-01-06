@@ -342,11 +342,21 @@ body {
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Data Analysis MCQs</h1>
-            <p>Answer all questions and submit to see your results</p>
-        </header>
+    <!-- Landing Page -->
+    <div id="landingPage" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; background-color: #f9fafb; cursor: pointer;">
+        <h1 style="margin-bottom: 20px; color: #4f46e5;">Data Analysis MCQs</h1>
+        <p style="font-size: 1.5rem; margin-bottom: 30px; direction: rtl; color: #1f2937;">اضغط على الصورة</p>
+        <img src="WhatsApp Image 2026-01-06 at 10.45.31 PM.jpeg" alt="Start Exam" style="max-width: 100%; max-height: 300px; transition: transform 0.3s; object-fit: contain;" id="examImage">
+        <p style="margin-top: 20px; color: #6b7280;">Click the image to start the exam</p>
+    </div>
+
+    <!-- Main Content (initially hidden) -->
+    <div id="mainContent" style="display: none;">
+        <div class="container">
+            <header>
+                <h1>Data Analysis MCQs</h1>
+                <p>Answer all questions and submit to see your results</p>
+            </header>
 
         <div id="quizContainer">
             <!-- Questions will be inserted here by JavaScript -->
@@ -1223,9 +1233,30 @@ body {
     ]
 };
         // DOM Elements
+        const landingPage = document.getElementById('landingPage');
+        const mainContent = document.getElementById('mainContent');
         const quizContainer = document.getElementById('quizContainer');
         const submitBtn = document.getElementById('submitBtn');
         const resultContainer = document.getElementById('resultContainer');
+        const examImage = document.getElementById('examImage');
+
+        // Add click event to landing page to show main content
+        landingPage.addEventListener('click', () => {
+            landingPage.style.display = 'none';
+            mainContent.style.display = 'block';
+            // Initialize the quiz when showing the main content
+            initQuiz();
+            addEventListeners();
+        });
+
+        // Add hover effect for the exam image
+        examImage.addEventListener('mouseover', () => {
+            examImage.style.transform = 'scale(1.1)';
+        });
+
+        examImage.addEventListener('mouseout', () => {
+            examImage.style.transform = 'scale(1)';
+        });
         const scoreElement = document.getElementById('score');
         const totalQuestionsElement = document.getElementById('totalQuestions');
         const restartBtn = document.getElementById('restartBtn');
@@ -1234,7 +1265,7 @@ body {
         let score = 0;
         let userAnswers = {};
 
-       // Initialize the quiz
+       // Initialize the quiz when the landing page is clicked
 function initQuiz() {
     let quizHTML = '';
     let questionNumber = 1;
@@ -1454,7 +1485,9 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Initialize the quiz when the page loads
-window.onload = initQuiz;
+window.onload = () => {
+    // Do nothing
+};
     </script>
 </body>
 </html>
