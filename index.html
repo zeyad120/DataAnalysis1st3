@@ -343,12 +343,68 @@ body {
 </head>
 <body>
     <!-- Landing Page -->
-    <div id="landingPage" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; background-color: #f9fafb; cursor: pointer;">
+    <div id="landingPage" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; text-align: center; background-color: #f9fafb; padding: 20px;">
         <h1 style="margin-bottom: 20px; color: #4f46e5;">Data Analysis MCQs</h1>
-        <p style="font-size: 1.5rem; margin-bottom: 30px; direction: rtl; color: #1f2937;">اضغط على الصورة</p>
-        <img src="WhatsApp Image 2026-01-06 at 10.45.31 PM.jpeg" alt="Start Exam" style="max-width: 100%; max-height: 300px; transition: transform 0.3s; object-fit: contain;" id="examImage">
-        <p style="margin-top: 20px; color: #6b7280;">Click the image to start the exam</p>
+        <div id="initialView" style="display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+            <p style="font-size: 1.5rem; margin-bottom: 30px; direction: rtl; color: #1f2937;">اضغط على الصورة</p>
+            <img src="WhatsApp Image 2026-01-06 at 10.45.31 PM.jpeg" alt="Start Exam" style="max-width: 100%; max-height: 300px; transition: transform 0.3s; object-fit: contain;" id="examImage">
+            <p style="margin-top: 20px; color: #6b7280;">Click the image to view chapters</p>
+        </div>
+        
+        <!-- Chapter Selection (initially hidden) -->
+        <div id="chapterSelection" style="display: none; width: 100%; max-width: 600px; margin-top: 20px;">
+            <h2 style="margin-bottom: 30px; color: #4f46e5;">Select a Chapter</h2>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <button class="chapter-btn" data-chapter="0" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                    <span>Chapter 1</span>
+                    <span>Introduction to Data Analysis</span>
+                </button>
+                <button class="chapter-btn" data-chapter="1" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <span>Chapter 2</span>
+                    <span>Data Collection & Preparation</span>
+                </button>
+                <button class="chapter-btn" data-chapter="2" style="background: linear-gradient(135deg, #a855f7, #9333ea);">
+                    <span>Chapter 3</span>
+                    <span>Exploratory Data Analysis</span>
+                </button>
+            </div>
+        </div>
     </div>
+    
+    <style>
+        .chapter-btn {
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .chapter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .chapter-btn span:first-child {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .chapter-btn {
+                padding: 16px;
+                font-size: 1rem;
+            }
+            .chapter-btn span:first-child {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
 
     <!-- Main Content (initially hidden) -->
     <div id="mainContent" style="display: none;">
@@ -1253,27 +1309,76 @@ body {
         const resultContainer = document.getElementById('resultContainer');
         const examImage = document.getElementById('examImage');
 
-        // Function to show main content and hide landing page
-        function showMainContent() {
+        // DOM Elements for chapter selection
+        const initialView = document.getElementById('initialView');
+        const chapterSelection = document.getElementById('chapterSelection');
+        const chapterButtons = document.querySelectorAll('.chapter-btn');
+        let selectedChapter = null;
+
+        // Function to show chapter selection
+        function showChapterSelection() {
+            initialView.style.display = 'none';
+            chapterSelection.style.display = 'block';
+            // Update URL without page reload
+            window.history.pushState({page: 'chapters'}, '', '#chapters');
+        }
+
+        // Function to show main content with selected chapter
+        function showMainContent(chapterIndex) {
             landingPage.style.display = 'none';
             mainContent.style.display = 'block';
-            // Initialize the quiz when showing the main content
+            // Store the selected chapter
+            selectedChapter = chapterIndex;
+            // Update URL without page reload
+            window.history.pushState({page: 'quiz', chapter: chapterIndex}, '', `#quiz-${chapterIndex}`);
+            // Initialize the quiz with the selected chapter
             initQuiz();
             addEventListeners();
         }
 
-        // Add click event to landing page to show main content
-        landingPage.addEventListener('click', showMainContent);
+        // Add click event to initial view
+        initialView.addEventListener('click', function() {
+            showChapterSelection();
+            // Update URL for the initial chapter selection view
+            window.history.pushState({page: 'chapters'}, '', '#chapters');
+        });
 
-        // Add click event to back button to return to landing page
+        // Add click events to chapter buttons
+        chapterButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const chapterIndex = parseInt(button.getAttribute('data-chapter'));
+                showMainContent(chapterIndex);
+            });
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(event) {
+            if (window.location.hash === '#chapters') {
+                mainContent.style.display = 'none';
+                landingPage.style.display = 'flex';
+                chapterSelection.style.display = 'block';
+                initialView.style.display = 'none';
+                // Reset the quiz state
+                quizContainer.innerHTML = '';
+                resultContainer.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else if (window.location.hash === '') {
+                mainContent.style.display = 'none';
+                landingPage.style.display = 'flex';
+                chapterSelection.style.display = 'none';
+                initialView.style.display = 'flex';
+                // Reset the quiz state
+                quizContainer.innerHTML = '';
+                resultContainer.style.display = 'none';
+                submitBtn.style.display = 'block';
+            }
+        });
+
+        // Add click event to back button to use browser's back functionality
         document.getElementById('backToMain').addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event bubbling
-            mainContent.style.display = 'none';
-            landingPage.style.display = 'flex';
-            // Reset the quiz state
-            quizContainer.innerHTML = '';
-            resultContainer.style.display = 'none';
-            submitBtn.style.display = 'block';
+            e.preventDefault();
+            window.history.back();
         });
 
         // Add hover effect for the exam image
@@ -1292,7 +1397,7 @@ body {
         let score = 0;
         let userAnswers = {};
 
-       // Initialize the quiz when the landing page is clicked
+       // Initialize the quiz with the selected chapter
 function initQuiz() {
     let quizHTML = '';
     let questionNumber = 1;
@@ -1300,39 +1405,39 @@ function initQuiz() {
     // Reset user answers
     userAnswers = {};
     
-    // Loop through each chapter
-    quizData.chapters.forEach((chapter, chapterIndex) => {
-        // Add chapter title
-        quizHTML += `<h2 class="chapter-title">${chapter.chapterTitle}</h2>`;
-        
-        // Add questions for this chapter
-        chapter.questions.forEach(question => {
-           // In the initQuiz function, update the question container HTML to include all necessary elements:
-quizHTML += `
-    <div class="question-container" id="q${question.id - 1}">
-        <div class="question">${questionNumber++}. ${question.question}</div>
-        <div class="options">
-            ${question.options.map(option => `
-                <label class="option" data-question="${question.id - 1}" data-option="${option.key}">
-                    <input type="radio" 
-                           name="q${question.id - 1}" 
-                           value="${option.key}">
-                    <span><strong>${option.key}.</strong> ${option.text}</span>
-                </label>
-            `).join('')}
-        </div>
-        <button class="check-answer" data-question="${question.id - 1}">Check Answer</button>
-        <div class="feedback" id="feedback-${question.id - 1}"></div>
-        <div class="explanation" style="display: none;">
-            <button class="show-explanation" data-question="${question.id - 1}">Show Explanation</button>
-            <div class="explanation-text">
-                <strong>Explanation:</strong> ${question.explanation}
-            </div>
-        </div>
-    </div>
-`;
-        });
+    // Get the selected chapter data
+    const chapter = quizData.chapters[selectedChapter];
+    
+    // Add chapter title
+    quizHTML += `<div class="chapter-title">${chapter.chapterTitle}</div>`;
+    
+    // Loop through questions in the selected chapter
+    chapter.questions.forEach((q) => {
+        quizHTML += `
+            <div class="question-container" data-question-id="${q.id}">
+                <div class="question">${questionNumber}. ${q.question}</div>
+                <div class="options">
+                    ${q.options.map(opt => `
+                        <label class="option">
+                            <input type="radio" name="q${q.id}" value="${opt.key}">
+                            <span class="option-text">${opt.key}. ${opt.text}</span>
+                        </label>
+                    `).join('')}
+                </div>
+                <button class="check-answer" data-question="${q.id}">Check Answer</button>
+                <div class="feedback" id="feedback-${q.id}"></div>
+                <div class="explanation">
+                    <button class="show-explanation" data-question="${q.id}">Show Explanation</button>
+                    <div class="explanation-text" style="display: none;">
+                        <strong>Explanation:</strong> ${q.explanation || 'No explanation available.'}
+                    </div>
+                </div>
+            </div>`;
+        questionNumber++;
     });
+    
+    quizContainer.innerHTML = quizHTML;
+    addEventListeners();
 
     quizContainer.innerHTML = quizHTML;
     addEventListeners();
