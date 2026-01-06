@@ -1584,30 +1584,39 @@ themeToggle.addEventListener('click', () => {
 
 // Show results
 function showResults() {
-    const allQuestions = quizData.chapters.flatMap(chapter => chapter.questions);
+    const currentChapter = quizData.chapters[selectedChapter];
+    const chapterQuestions = currentChapter.questions;
     score = 0;
+    const totalQuestions = chapterQuestions.length;
     
-    allQuestions.forEach((question) => {
-        const userAnswer = userAnswers[question.id - 1];
-        const questionElement = document.getElementById(`q${question.id - 1}`);
-        
-        if (!questionElement) return;
-        
-        if (userAnswer === question.correctAnswer) {
+    // Check each question in the current chapter
+    chapterQuestions.forEach(question => {
+        const selectedOption = document.querySelector(`input[name="q${question.id}"]:checked`);
+        if (selectedOption && selectedOption.value === question.correctAnswer) {
             score++;
-            questionElement.classList.add('correct-answer');
-        } else {
-            questionElement.classList.add('wrong-answer');
         }
     });
 
-    // Show score
-    scoreElement.textContent = score;
-    totalQuestionsElement.textContent = allQuestions.length;
-    resultContainer.style.display = 'block';
+    // Calculate percentage
+    const percentage = Math.round((score / totalQuestions) * 100);
     
-    // Scroll to results
-    resultContainer.scrollIntoView({ behavior: 'smooth' });
+    // Display results
+    resultContainer.innerHTML = `
+        <h2>Quiz Results - ${currentChapter.chapterTitle}</h2>
+        <p>You scored ${score} out of ${totalQuestions} (${percentage}%)</p>
+        <button id="restartBtn">Restart Quiz</button>
+    `;
+    
+    resultContainer.style.display = 'block';
+    submitBtn.style.display = 'none';
+    window.scrollTo(0, document.body.scrollHeight);
+    
+    // Add event listener for restart button
+    document.getElementById('restartBtn').addEventListener('click', () => {
+        resultContainer.style.display = 'none';
+        window.scrollTo(0, 0);
+        initQuiz();
+    });
 }
 
 // Add chapter title styling
