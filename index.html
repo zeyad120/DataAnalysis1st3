@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
+    <!-- Add these before your other scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
     <title>Data Analysis MCQs on 1st 3 Lectures</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --primary: #4f46e5;
@@ -1700,36 +1701,31 @@ document.head.appendChild(style);
 const ADMIN_USERNAME = "zeyadmogy20@gmail.com";
 const ADMIN_PASSWORD = "1882005da";
 
-// Function to save quiz result to localStorage
+// Replace the saveQuizResult function with this:
 function saveQuizResult(chapter, score, totalQuestions) {
     try {
-        // Get or create a user identifier
-        let userId = localStorage.getItem('quizUserId');
-        if (!userId) {
-            userId = 'user-' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('quizUserId', userId);
-        }
-
+        // Generate a unique ID for this result
+        const resultId = 'result-' + Date.now();
+        const userId = 'user-' + (localStorage.getItem('quizUserId') || Math.random().toString(36).substr(2, 9));
+        localStorage.setItem('quizUserId', userId);
+        
         const result = {
             userId: userId,
             chapter: chapter,
             score: score,
             totalQuestions: totalQuestions,
             percentage: Math.round((score / totalQuestions) * 100),
-            timestamp: new Date().toISOString()
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            deviceId: navigator.userAgent
         };
         
-        // Get existing results or initialize empty array
-        const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
-        
-        // Add new result
-        results.push(result);
-        
-        // Save back to localStorage
-        localStorage.setItem('quizResults', JSON.stringify(results));
-        console.log('Result saved to localStorage');
+        // Save to Firebase
+        database.ref('quizResults/' + resultId).set(result)
+            .then(() => console.log('Result saved to Firebase'))
+            .catch(error => console.error('Error saving result:', error));
+            
     } catch (error) {
-        console.error('Error saving result:', error);
+        console.error('Error in saveQuizResult:', error);
     }
 }
 

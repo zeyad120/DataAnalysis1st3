@@ -1,4 +1,4 @@
-// Your web app's Firebase configuration
+// In firebase-config.js
 const firebaseConfig = {
     apiKey: "AIzaSyDmXqZJX7QJZJZJZJZJZJZJZJZJZJZJZJZJZ",
     authDomain: "dataanalysisquiz-12345.firebaseapp.com",
@@ -14,6 +14,5 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// Admin credentials
-const ADMIN_EMAIL = "zeyadmogy20@gmail.com";
-const ADMIN_PASSWORD = "1882005da";
+// Get a reference to the database service
+const database = firebase.database();
